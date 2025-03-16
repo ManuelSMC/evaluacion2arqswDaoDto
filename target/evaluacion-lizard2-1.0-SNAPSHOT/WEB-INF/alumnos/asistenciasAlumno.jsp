@@ -10,7 +10,7 @@
     <%@ include file="/WEB-INF/navbar.jsp" %>
 
     <div class="container my-5">
-        <h2 class="text-center text-primary">Asistencias de la Materia - ${nombre_materia}</h2>
+        <h2 class="text-center">Asistencias de la Materia - <span class="text-primary">${nombre_materia}</span></h2>
 
         <table class="table table-striped table-bordered">
             <thead>

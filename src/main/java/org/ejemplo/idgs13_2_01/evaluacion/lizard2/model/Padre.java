@@ -2,14 +2,14 @@ package org.ejemplo.idgs13_2_01.evaluacion.lizard2.model;
 
 public class Padre {
     private int id;
-    private UsuarioModel usuario;
+    private int idUsuario;
 
     public Padre() {
     }
 
-    public Padre(int id, UsuarioModel usuario) {
+    public Padre(int id, int idUsuario) {
         this.id = id;
-        this.usuario = usuario;
+        this.idUsuario = idUsuario;
     }
 
     public int getId() {
@@ -20,12 +20,12 @@ public class Padre {
         this.id = id;
     }
 
-    public UsuarioModel getUsuario() {
-        return usuario;
+    public int getUsuario() {
+        return idUsuario;
     }
 
-    public void setUsuario(UsuarioModel usuario) {
-        this.usuario = usuario;
+    public void setUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     

@@ -1,0 +1,48 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Panel Principal</title>
+        
+    </head>
+    <body>
+        <%@ include file="/WEB-INF/navbar.jsp" %>
+
+        <div class="container text-center mt-5">
+            <h1 class="mb-4">- ${usuario.rol} -</h1>
+            <h1 class="mb-4">Bienvenido, <span class="text-primary">${usuario.nombre}</span></h1>
+            <p class="lead">¿A dónde quieres ir hoy?</p>
+
+            <div class="row justify-content-center mt-4">
+
+                <c:if test="${usuario.rol == 'Coordinador'}">
+                    <div class="col-md-3">
+                        <a href="maestros" class="btn btn-primary btn-lg w-100">Maestros</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="grupos" class="btn btn-primary btn-lg w-100">Grupos</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="materias" class="btn btn-primary btn-lg w-100">Materias</a>
+                    </div>
+                </c:if>
+
+                <c:if test="${usuario.rol == 'Recursos Humanos'}">
+                    <div class="col-md-3">
+                        <a href="maestros" class="btn btn-primary btn-lg w-100">Maestros</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="grupos" class="btn btn-primary btn-lg w-100">Grupos</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="materias" class="btn btn-primary btn-lg w-100">Materias</a>
+                    </div>
+                </c:if>
+            </div>
+        </div>
+
+    </body>
+</html>

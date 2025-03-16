@@ -2,8 +2,8 @@ package org.ejemplo.idgs13_2_01.evaluacion.lizard2.model;
 
 public class Horario {
     private int id;
-    private Grupo grupo;
-    private Materia materia;
+    private int idGrupo;
+    private int idMateria;
     private String dia;
     private String horaInicio;
     private String horaFin;
@@ -11,10 +11,10 @@ public class Horario {
     public Horario() {
     }
 
-    public Horario(int id, Grupo grupo, Materia materia, String dia, String horaInicio, String horaFin) {
+    public Horario(int id, int idGrupo, int idMateria, String dia, String horaInicio, String horaFin) {
         this.id = id;
-        this.grupo = grupo;
-        this.materia = materia;
+        this.idGrupo = idGrupo;
+        this.idMateria = idMateria;
         this.dia = dia;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
@@ -28,20 +28,20 @@ public class Horario {
         this.id = id;
     }
 
-    public Grupo getGrupo() {
-        return grupo;
+    public int getGrupo() {
+        return idGrupo;
     }
 
-    public void setGrupo(Grupo grupo) {
-        this.grupo = grupo;
+    public void setGrupo(int idGrupo) {
+        this.idGrupo = idGrupo;
     }
 
-    public Materia getMateria() {
-        return materia;
+    public int getMateria() {
+        return idMateria;
     }
 
-    public void setMateria(Materia materia) {
-        this.materia = materia;
+    public void setMateria(int idMateria) {
+        this.idMateria = idMateria;
     }
 
     public String getDia() {

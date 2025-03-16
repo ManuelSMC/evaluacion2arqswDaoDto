@@ -10,7 +10,7 @@
     <%@ include file="/WEB-INF/navbar.jsp" %>
 
     <div class="container my-5">
-        <h2 class="text-center text-primary">Materias de ${usuario.nombre}</h2>
+        <h2 class="text-center">Materias de <span class="text-primary">${usuario.nombre}</span></h2>
 
         <table class="table table-striped table-bordered">
             <thead>

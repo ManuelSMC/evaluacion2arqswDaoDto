@@ -2,18 +2,18 @@ package org.ejemplo.idgs13_2_01.evaluacion.lizard2.model;
 
 public class MaestroMateriaGrupo {
     private int id;
-    private Maestro maestro;
-    private Materia materia;
-    private Grupo grupo;
+    private int idMaestro;
+    private int idMateria;
+    private int idGrupo;
 
     public MaestroMateriaGrupo() {
     }
 
-    public MaestroMateriaGrupo(int id, Maestro maestro, Materia materia, Grupo grupo) {
+    public MaestroMateriaGrupo(int id, int idMaestro, int idMateria, int idGrupo) {
         this.id = id;
-        this.maestro = maestro;
-        this.materia = materia;
-        this.grupo = grupo;
+        this.idMaestro = idMaestro;
+        this.idMateria = idMateria;
+        this.idGrupo = idGrupo;
     }
 
     public int getId() {
@@ -24,29 +24,28 @@ public class MaestroMateriaGrupo {
         this.id = id;
     }
 
-    public Maestro getMaestro() {
-        return maestro;
+    public int getIdMaestro() {
+        return idMaestro;
     }
 
-    public void setMaestro(Maestro maestro) {
-        this.maestro = maestro;
+    public void setIdMaestro(int idMaestro) {
+        this.idMaestro = idMaestro;
     }
 
-    public Materia getMateria() {
-        return materia;
+    public int getIdMateria() {
+        return idMateria;
     }
 
-    public void setMateria(Materia materia) {
-        this.materia = materia;
+    public void setIdMateria(int idMateria) {
+        this.idMateria = idMateria;
     }
 
-    public Grupo getGrupo() {
-        return grupo;
+    public int getIdGrupo() {
+        return idGrupo;
     }
 
-    public void setGrupo(Grupo grupo) {
-        this.grupo = grupo;
+    public void setIdGrupo(int idGrupo) {
+        this.idGrupo = idGrupo;
     }
-
     
 }

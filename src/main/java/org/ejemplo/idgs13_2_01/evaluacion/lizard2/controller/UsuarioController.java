@@ -14,7 +14,7 @@ import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Calificacion;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Asistencia;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Materia;
 
-@WebServlet(name = "UsuarioController", urlPatterns = {"/login", "/materiasAlumno", "/asistencias", "/cerrar-sesion", "/asistenciasAlumno"})
+@WebServlet(name = "UsuarioController", urlPatterns = {"/login", "/materiasAlumno", "/asistencias", "/cerrar-sesion", "/asistenciasAlumno", "/homepage"})
 public class UsuarioController extends HttpServlet {
     UsuarioModel usuarioModel = new UsuarioModel();
     String ruta = "";
@@ -25,11 +25,6 @@ public class UsuarioController extends HttpServlet {
         
         HttpSession session = request.getSession();
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-
-        if (usuario == null || (!usuario.getRol().equals("Alumno") && !usuario.getRol().equals("Padre"))) {
-            response.sendRedirect("login");
-            return;
-        }
 
         Alumno alumno = new Alumno();
         
@@ -49,7 +44,10 @@ public class UsuarioController extends HttpServlet {
                 break;
                 
             case "/materiasAlumno":
-                
+                if (usuario == null) {
+                    response.sendRedirect("login");
+                    return;
+                }
                 alumno = alumno.obtenerAlumnoPorUsuario(usuario.getId());
                 /*System.out.println("AlumnoId: " + alumno.getId());
                 System.out.println("AlumnoIdGrupo: " + alumno.getIdGrupo());
@@ -71,6 +69,10 @@ public class UsuarioController extends HttpServlet {
                 break;
                 
             case "/asistenciasAlumno":
+                if (usuario == null) {
+                    response.sendRedirect("login");
+                    return;
+                }
                 String idMateriaStr = request.getParameter("idMateria");
                 int idMateria = Integer.parseInt(idMateriaStr);
                 
@@ -96,6 +98,13 @@ public class UsuarioController extends HttpServlet {
                 }
                 request.getRequestDispatcher("/WEB-INF/alumnos/asistenciasAlumno.jsp").forward(request, response);
                 break;
+            case "/homepage":
+                if (usuario == null) {
+                    response.sendRedirect("login");
+                    return;
+                }
+                request.getRequestDispatcher("/WEB-INF/homepage.jsp").forward(request, response);
+                break;
                 
             default:
                 throw new AssertionError();
@@ -117,7 +126,7 @@ public class UsuarioController extends HttpServlet {
                 request.getSession().setAttribute("usuario", usuario);
                 if (usuario.getRol().equals("Alumno") || usuario.getRol().equals("Padre")) {
                     response.sendRedirect("materiasAlumno");
-                } else {
+                } else if(usuario.getRol().equals("Coordinador")){
                     response.sendRedirect("homepage");
                 }
             } else {

@@ -3,15 +3,15 @@ package org.ejemplo.idgs13_2_01.evaluacion.lizard2.model;
 public class Grupo {
     private int id;
     private String nombre;
-    private Carrera carrera;
+    private int idCarrera;
 
     public Grupo() {
     }
 
-    public Grupo(int id, String nombre, Carrera carrera) {
+    public Grupo(int id, String nombre, int idCarrera) {
         this.id = id;
         this.nombre = nombre;
-        this.carrera = carrera;
+        this.idCarrera = idCarrera;
     }
     
     public int getId() {
@@ -30,12 +30,12 @@ public class Grupo {
         this.nombre = nombre;
     }
 
-    public Carrera getCarrera() {
-        return carrera;
+    public int getCarrera() {
+        return idCarrera;
     }
 
-    public void setCarrera(Carrera carrera) {
-        this.carrera = carrera;
+    public void setCarrera(int idCarrera) {
+        this.idCarrera = idCarrera;
     }
 
     
