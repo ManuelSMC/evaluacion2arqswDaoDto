@@ -38,7 +38,7 @@ public class Alumno {
     public int getIdPadre() { return idPadre; }
     public void setIdPadre(int idPadre) { this.idPadre = idPadre; }
 
-    public Alumno obtenerAlumnoPorUsuario(int idUsuario) {
+    public Alumno getById(int idUsuario) {
         
         try {
             Connection conn;

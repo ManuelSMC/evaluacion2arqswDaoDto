@@ -108,7 +108,42 @@ public class UsuarioModel {
         return null;
     }
     
-    
-    
-    
+    public UsuarioModel findById(int id_usuario) {
+        try {
+            Connection conn;
+            ResultSet rs;
+            PreparedStatement pst;
+            String consulta;
+
+            consulta = "SELECT * FROM usuarios WHERE id = ?";
+
+            //driver para mysql8
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true", "root", "Perfect97");
+            
+            pst = conn.prepareStatement(consulta);
+            pst.setInt(1, id_usuario);
+            rs = pst.executeQuery();
+            
+            if (rs.next()) {
+                UsuarioModel usuario = new UsuarioModel();
+                usuario.setId(rs.getInt("id"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setCorreo(rs.getString("correo"));
+                usuario.setContrasena(rs.getString("contrasena"));
+                usuario.setRol(rs.getString("rol"));
+                conn.close();
+                return usuario;
+            }
+            
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Materia.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } catch (SQLException ex) {
+            Logger.getLogger(Materia.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        return null;
+    }
 }

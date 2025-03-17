@@ -11,22 +11,19 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-    <img src="img/logo.png" alt="Logo" style="width: 50px; height: auto">
+        <img src="img/logo.png" alt="Logo" style="width: 50px; height: auto">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="alumnos">Alumnos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="materias">Materias</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="cerrar-sesion">Cerrar sesión</a>
                 </li>
             </ul>
+            <span class="navbar-text text-white">
+                Usuario: <c:out value="${sessionScope.usuario.nombre}" />
+            </span>
         </div>
     </div>
 </nav>

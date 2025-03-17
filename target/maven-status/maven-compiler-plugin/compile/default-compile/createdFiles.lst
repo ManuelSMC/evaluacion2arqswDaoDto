@@ -1,3 +1,4 @@
+org\ejemplo\idgs13_2_01\evaluacion\lizard2\controller\MaestroController.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Asistencia.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Carrera.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Horario.class
@@ -5,6 +6,7 @@ org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Padre.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Grupo.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\MaestroMateriaGrupo.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\UsuarioModel.class
+org\ejemplo\idgs13_2_01\evaluacion\lizard2\controller\MateriaController.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Alumno.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Materia.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Calificacion.class
@@ -12,3 +14,4 @@ org\ejemplo\idgs13_2_01\evaluacion\lizard2\JakartaRestConfiguration.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\resources\JakartaEE10Resource.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Maestro.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\controller\UsuarioController.class
+org\ejemplo\idgs13_2_01\evaluacion\lizard2\controller\GrupoController.class

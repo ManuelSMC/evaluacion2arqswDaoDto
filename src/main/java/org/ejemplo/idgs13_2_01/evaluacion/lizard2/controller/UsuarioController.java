@@ -48,7 +48,7 @@ public class UsuarioController extends HttpServlet {
                     response.sendRedirect("login");
                     return;
                 }
-                alumno = alumno.obtenerAlumnoPorUsuario(usuario.getId());
+                alumno = alumno.getById(usuario.getId());
                 /*System.out.println("AlumnoId: " + alumno.getId());
                 System.out.println("AlumnoIdGrupo: " + alumno.getIdGrupo());
                 System.out.println("AlumnoIdPadre: " + alumno.getIdPadre());
@@ -76,7 +76,7 @@ public class UsuarioController extends HttpServlet {
                 String idMateriaStr = request.getParameter("idMateria");
                 int idMateria = Integer.parseInt(idMateriaStr);
                 
-                alumno = alumno.obtenerAlumnoPorUsuario(usuario.getId());
+                alumno = alumno.getById(usuario.getId());
                 /*System.out.println("AlumnoId: " + alumno.getId());
                 System.out.println("AlumnoIdGrupo: " + alumno.getIdGrupo());
                 System.out.println("AlumnoIdPadre: " + alumno.getIdPadre());

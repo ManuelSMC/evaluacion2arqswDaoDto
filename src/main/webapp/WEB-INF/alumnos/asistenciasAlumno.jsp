@@ -12,6 +12,10 @@
     <div class="container my-5">
         <h2 class="text-center">Asistencias de la Materia - <span class="text-primary">${nombre_materia}</span></h2>
 
+        <div class="text-center mt-3">
+            <a href="materiasAlumno" class="btn btn-secondary">Volver a materias</a>
+        </div>
+        <br>
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
