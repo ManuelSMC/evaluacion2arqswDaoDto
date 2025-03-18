@@ -137,10 +137,13 @@ public class Maestro {
             pst.setInt(1, idUsuario);
             rs = pst.executeQuery();
             while (rs.next()) {
+                Carrera carrera = new Carrera();
+                carrera = carrera.getById(rs.getInt("id_carrera"));
                 Grupo grupo = new Grupo(
                         rs.getInt("id_grupo"),
                         rs.getString("grupo"),
-                        rs.getInt("id_carrera")
+                        rs.getInt("id_carrera"),
+                        carrera
                 );
                 grupos.add(grupo);
                
@@ -163,7 +166,7 @@ public class Maestro {
             PreparedStatement pst;
             String consulta;
 
-            consulta = "SELECT m.id AS id_materia, m.nombre AS nombre_materia, g.id AS id_grupo, g.nombre AS nombre_grupo "
+            consulta = "SELECT DISTINCT m.id AS id_materia, m.nombre AS nombre_materia, g.id AS id_grupo, g.nombre AS nombre_grupo "
                     + "FROM MaestroMateriaGrupo mmg "
                     + "JOIN Materias m ON mmg.id_materia = m.id "
                     + "JOIN Grupos g ON mmg.id_grupo = g.id "
@@ -235,6 +238,60 @@ public class Maestro {
             return false;
         }
         
+    }
+    
+    
+    public Integer getIdMaestroPorUsuario(int id_usuario) {
+        try {
+            Connection conn;
+            ResultSet rs;
+            PreparedStatement pst;
+            String consulta;
+
+            consulta = "SELECT id FROM maestros WHERE id_usuario = ?";
+            
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
+                    "root",
+                    "Perfect97");
+
+            pst = conn.prepareStatement(consulta);
+
+            pst.setInt(1, id_usuario);
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                int maestroId = rs.getInt("id");
+                return maestroId;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+    
+    public void addMaestro(int idUsuario) {
+        try {
+            Connection conn;
+            ResultSet rs;
+            PreparedStatement pst;
+            String consulta;
+
+            consulta = "INSERT INTO maestros (id_usuario) VALUES (?)";
+
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
+                    "root",
+                    "Perfect97");
+
+            pst = conn.prepareStatement(consulta);
+
+            pst.setInt(1, idUsuario);
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
 }

@@ -6,6 +6,7 @@ org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Padre.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Grupo.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\MaestroMateriaGrupo.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\UsuarioModel.class
+org\ejemplo\idgs13_2_01\evaluacion\lizard2\controller\CarreraController.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\controller\MateriaController.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Alumno.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Materia.class

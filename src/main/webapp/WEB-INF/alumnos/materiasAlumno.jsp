@@ -26,7 +26,7 @@
                         <td>${materiaCalificacion.materia.nombre}</td>
                         <td>${materiaCalificacion.calificacion}</td>
                         <td>
-                            <a href="asistenciasAlumno?idMateria=${materiaCalificacion.id}" class="btn btn-info btn-sm">Ver Asistencias</a>
+                            <a href="asistenciasAlumno?idMateria=${materiaCalificacion.materia.id}" class="btn btn-info btn-sm">Ver Asistencias</a>
                         </td>
                     </tr>
                 </c:forEach>

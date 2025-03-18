@@ -19,13 +19,22 @@
             <thead class="table-dark">
                 <tr>
                     <th>Materia</th>
-
+                    <c:if test="${usuario.rol == 'Maestro'}">
+                        <th>Acciones</th>
+                    </c:if>
                 </tr>
             </thead>
             <tbody>
                 <c:forEach var="materia" items="${materias}">
                     <tr>
                         <td>${materia.nombre}</td>
+                        
+                        <c:if test="${usuario.rol == 'Maestro'}">
+                            <td>
+                                <a href="asistenciasMateriaMaestro?idMateria=${materia.id}&idMaestro=${idMaestro}&idGrupo=${idGrupo}" class="btn btn-warning btn-sm">Asistencias</a>
+                                <a href="calificacionesMateriaMaestro?idMateria=${materia.id}&idMaestro=${idMaestro}&idGrupo=${idGrupo}" class="btn btn-info btn-sm">Calificaciones</a>
+                            </td>
+                        </c:if>
                     </tr>
                 </c:forEach>
             </tbody>

@@ -21,9 +21,12 @@
     
     <div class="container my-5">
         <h2 class="text-center">Lista de grupos</h2>
-        <div class="text-center mt-3">
-            <a href="homepage" class="btn btn-secondary">Volver a homepage</a>
-        </div>
+        
+        <c:if test="${usuario.rol == 'Coordinador'}">        
+            <div class="text-center mt-3">
+                <a href="homepage" class="btn btn-secondary">Volver a homepage</a>
+            </div>
+        </c:if>
         <br>
         <table class="table table-striped table-bordered">
             <thead>

@@ -13,10 +13,13 @@ import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Alumno;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Calificacion;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Asistencia;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Materia;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Padre;
 
 @WebServlet(name = "UsuarioController", urlPatterns = {"/login", "/materiasAlumno", "/asistencias", "/cerrar-sesion", "/asistenciasAlumno", "/homepage"})
 public class UsuarioController extends HttpServlet {
     UsuarioModel usuarioModel = new UsuarioModel();
+    List<Asistencia> asistencias;
+    Padre padre = new Padre();
     String ruta = "";
     
     @Override
@@ -48,6 +51,15 @@ public class UsuarioController extends HttpServlet {
                     response.sendRedirect("login");
                     return;
                 }
+                if (usuario.getRol().equals("Padre")) {
+                    System.out.println("idUsuarioPadre" + usuario.getId());
+                    Integer idPadre = padre.getIdPadrePorUsuario(usuario.getId());
+                    
+                    alumno = alumno.getByIdPadre(idPadre);
+                    usuario = usuario.findById(alumno.getIdUsuario());
+                    request.setAttribute("usuario", usuario);
+                }
+                
                 alumno = alumno.getById(usuario.getId());
                 /*System.out.println("AlumnoId: " + alumno.getId());
                 System.out.println("AlumnoIdGrupo: " + alumno.getIdGrupo());
@@ -73,6 +85,16 @@ public class UsuarioController extends HttpServlet {
                     response.sendRedirect("login");
                     return;
                 }
+                
+                if (usuario.getRol().equals("Padre")) {
+                    System.out.println("idUsuarioPadre" + usuario.getId());
+                    Integer idPadre = padre.getIdPadrePorUsuario(usuario.getId());
+                    
+                    alumno = alumno.getByIdPadre(idPadre);
+                    usuario = usuario.findById(alumno.getIdUsuario());
+                }
+                
+                
                 String idMateriaStr = request.getParameter("idMateria");
                 int idMateria = Integer.parseInt(idMateriaStr);
                 
@@ -84,15 +106,14 @@ public class UsuarioController extends HttpServlet {
                 
                 if (alumno != null) {
                     
-                    List<Asistencia> asistencias = alumno.obtenerAsistencias(usuario.getId(), idMateria);
+                    asistencias = alumno.obtenerAsistencias(alumno.getId(), idMateria);
                     Materia materia = new Materia();
+                    System.out.println("idMateria: " + idMateria);
                     String nombre_materia = materia.findById(idMateria);
                     request.setAttribute("asistencias", asistencias);
                     request.setAttribute("nombre_materia", nombre_materia);
+                    System.out.println("nombre_materia: " + nombre_materia);
                     
-                    /*for (Asistencia asistencia: asistencias) {
-                        System.out.println("Fecha: " + asistencia.getFecha() + ", Asistencia: " + asistencia.getEstado());
-                    }*/
                 } else {
                     request.setAttribute("error", "No se encontraron datos del alumno.");
                 }
@@ -127,6 +148,14 @@ public class UsuarioController extends HttpServlet {
                 if (usuario.getRol().equals("Alumno") || usuario.getRol().equals("Padre")) {
                     response.sendRedirect("materiasAlumno");
                 } else if(usuario.getRol().equals("Coordinador")){
+                    response.sendRedirect("homepage");
+                }else if(usuario.getRol().equals("Maestro")){
+                    response.sendRedirect("gruposMaestro");
+                }else if(usuario.getRol().equals("Director")){
+                    response.sendRedirect("grupos");
+                }else if(usuario.getRol().equals("Recursos Humanos")){
+                    response.sendRedirect("homepage");
+                }else if(usuario.getRol().equals("SuperUsuario")){
                     response.sendRedirect("homepage");
                 }
             } else {

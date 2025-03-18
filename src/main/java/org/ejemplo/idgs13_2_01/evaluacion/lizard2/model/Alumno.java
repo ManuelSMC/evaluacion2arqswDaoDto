@@ -15,6 +15,7 @@ public class Alumno {
     private int idUsuario;
     private int idGrupo;
     private int idPadre;
+    private UsuarioModel usuario;
 
     public Alumno() {
     }
@@ -26,17 +27,53 @@ public class Alumno {
         this.idPadre = idPadre;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public Alumno(int id, int idUsuario, int idGrupo, int idPadre, UsuarioModel usuario) {
+        this.id = id;
+        this.idUsuario = idUsuario;
+        this.idGrupo = idGrupo;
+        this.idPadre = idPadre;
+        this.usuario = usuario;
+    }
+    
+    
 
-    public int getIdUsuario() { return idUsuario; }
-    public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
+    public int getId() {
+        return id; 
+    }
+    public void setId(int id) {
+        this.id = id; 
+    }
 
-    public int getIdGrupo() { return idGrupo; }
-    public void setIdGrupo(int idGrupo) { this.idGrupo = idGrupo; }
+    public int getIdUsuario() {
+        return idUsuario; 
+    }
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario; 
+    }
 
-    public int getIdPadre() { return idPadre; }
-    public void setIdPadre(int idPadre) { this.idPadre = idPadre; }
+    public int getIdGrupo() {
+        return idGrupo; 
+    }
+    public void setIdGrupo(int idGrupo) {
+        this.idGrupo = idGrupo; 
+    }
+
+    public int getIdPadre() {
+        return idPadre; 
+    }
+    public void setIdPadre(int idPadre) {
+        this.idPadre = idPadre; 
+    }
+
+    public UsuarioModel getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioModel usuario) {
+        this.usuario = usuario;
+    }
+    
+    
 
     public Alumno getById(int idUsuario) {
         
@@ -85,12 +122,16 @@ public class Alumno {
             PreparedStatement pst;
             String consulta;
 
-            consulta = "SELECT c.id, c.id_alumno, c.id_asignacion, c.calificacion, "
-                + "m.id AS materia_id, m.nombre AS materia_nombre "
-                + "FROM Calificaciones c "
-                + "JOIN MaestroMateriaGrupo mmg ON c.id_asignacion = mmg.id "
-                + "JOIN Materias m ON mmg.id_materia = m.id "
-                + "WHERE c.id_alumno = ?";
+            consulta = "SELECT DISTINCT "
+                    + "    m.id AS id_materia, "
+                    + "    m.nombre AS nombre_materia, "
+                    + "    c.calificacion "
+                    + "FROM Alumnos a "
+                    + "JOIN Grupos g ON a.id_grupo = g.id "
+                    + "JOIN MaestroMateriaGrupo mmg ON g.id = mmg.id_grupo "
+                    + "JOIN Materias m ON mmg.id_materia = m.id "
+                    + "LEFT JOIN Calificaciones c ON c.id_asignacion = mmg.id AND c.id_alumno = a.id "
+                    + "WHERE a.id = ?";
             
             conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
@@ -101,16 +142,12 @@ public class Alumno {
             pst.setInt(1, this.id);
             rs = pst.executeQuery();
             while (rs.next()) {
-                Materia materia = new Materia(rs.getInt("materia_id"), rs.getString("materia_nombre"));
-                Calificacion calificacion = new Calificacion(
-                        rs.getInt("id"),
-                        rs.getInt("id_alumno"),
-                        rs.getInt("id_asignacion"),
-                        rs.getDouble("calificacion"),
-                        materia
-                );
+                Materia materia = new Materia(rs.getInt("id_materia"),
+                rs.getString("nombre_materia"));
+                Calificacion calificacion = new Calificacion();
+                calificacion.setMateria(materia);
+                calificacion.setCalificacion(rs.getDouble("calificacion"));
                 calificaciones.add(calificacion);
-               
             }
             return calificaciones;
         } catch (SQLException e) {
@@ -162,4 +199,89 @@ public class Alumno {
 
         return null;
     }
+    
+    public Alumno getByIdPadre(int idPadre) {
+        
+        try {
+            Connection conn;
+            ResultSet rs;
+            PreparedStatement pst;
+            String consulta;
+
+            consulta = "SELECT * FROM alumnos WHERE id_padre = ?";
+            
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
+                    "root",
+                    "Perfect97");
+
+            pst = conn.prepareStatement(consulta);
+
+            pst.setInt(1, idPadre);
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                Alumno alumno = new Alumno(
+                        rs.getInt("id"),
+                        rs.getInt("id_usuario"),
+                        rs.getInt("id_grupo"),
+                        rs.getInt("id_padre")
+                );
+                return alumno;
+            }
+            
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public List<Alumno> getAlumnosGrupoMaestro(int idGrupo, int idMaestro, int idMateria) {
+        List<Alumno> listaAlumnos = new ArrayList<>();
+
+        try {
+            Connection conn;
+            ResultSet rs;
+            PreparedStatement pst;
+            String consulta;
+
+            consulta = "SELECT DISTINCT a.id, a.id_usuario, a.id_grupo, a.id_padre "
+                    + "FROM Alumnos a "
+                    + "JOIN MaestroMateriaGrupo mmg ON a.id_grupo = mmg.id_grupo "
+                    + "WHERE mmg.id_grupo = ? AND mmg.id_maestro = ? AND mmg.id_materia = ?";
+
+            // Cargar el driver de MySQL
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true", "root", "Perfect97");
+
+            pst = conn.prepareStatement(consulta);
+            pst.setInt(1, idGrupo);
+            pst.setInt(2, idMaestro);
+            pst.setInt(3, idMateria);
+            rs = pst.executeQuery();
+            
+            
+            while (rs.next()) {
+                UsuarioModel usuario = new UsuarioModel();
+                Alumno alumno = new Alumno();
+                alumno.setId(rs.getInt("id"));
+                alumno.setIdUsuario(rs.getInt("id_usuario"));
+                alumno.setIdGrupo(rs.getInt("id_grupo"));
+                alumno.setIdPadre(rs.getInt("id_padre"));
+                alumno.setUsuario(usuario.findById(rs.getInt("id_usuario")));
+                listaAlumnos.add(alumno);
+            }
+            conn.close();
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return listaAlumnos;
+    }
+
+    
 }

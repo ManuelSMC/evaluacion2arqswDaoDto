@@ -13,7 +13,7 @@
 
         <div class="container text-center mt-5">
             <h1 class="mb-4">- ${usuario.rol} -</h1>
-            <h1 class="mb-4">Bienvenido, <span class="text-primary">${usuario.nombre}</span></h1>
+            <h1 class="mb-4">Bienvenid@, <span class="text-primary">${usuario.nombre}</span></h1>
             <p class="lead">¿A dónde quieres ir hoy?</p>
 
             <div class="row justify-content-center mt-4">
@@ -35,10 +35,22 @@
                         <a href="maestros" class="btn btn-primary btn-lg w-100">Maestros</a>
                     </div>
                     <div class="col-md-3">
-                        <a href="grupos" class="btn btn-primary btn-lg w-100">Grupos</a>
+                        <a href="carreras" class="btn btn-primary btn-lg w-100">Carreras</a>
+                    </div>
+                </c:if>
+
+                <c:if test="${usuario.rol == 'SuperUsuario'}">
+                    <div class="col-md-3">
+                        <a href="coordinadores" class="btn btn-primary btn-lg w-100">Coordinadores</a>
                     </div>
                     <div class="col-md-3">
-                        <a href="materias" class="btn btn-primary btn-lg w-100">Materias</a>
+                        <a href="directores" class="btn btn-primary btn-lg w-100">Directores</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="recursosHumanos" class="btn btn-primary btn-lg w-100">Recursos Humanos</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="serviciosEscolares" class="btn btn-primary btn-lg w-100">Servicios Escolares</a>
                     </div>
                 </c:if>
             </div>

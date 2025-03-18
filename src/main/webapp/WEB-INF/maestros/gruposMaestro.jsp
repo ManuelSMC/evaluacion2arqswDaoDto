@@ -22,8 +22,11 @@
     <div class="container my-5">
         <h2 class="text-center">Grupos de <span class="text-primary">${nombreMaestro}</span></h2>
         <div class="text-center mt-3">
+            <c:if test="${usuario.rol == 'Coordinador'}">
             <a href="maestros" class="btn btn-secondary">Volver a Maestros</a>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#asignarModal">Asignar grupo y materia</button>
+            
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#asignarModal">Asignar grupo y materia</button>
+            </c:if>
         </div>
         <br>
         <table class="table table-striped table-bordered">
@@ -38,7 +41,7 @@
                 <c:forEach var="grupo" items="${grupos}">
                     <tr>
                         <td>${grupo.nombre}</td>
-                        <td>${grupo.idCarrera}</td>
+                        <td>${grupo.carrera.nombre}</td>
                         <td>
                             <a href="materiasGrupoMaestro?idGrupo=${grupo.id}&idMaestro=${idMaestro}" class="btn btn-info btn-sm">Ver Materias</a>
                         </td>

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -146,4 +147,37 @@ public class UsuarioModel {
         }
         return null;
     }
+    
+    public UsuarioModel addUsuario(String nombre, String correo, String contrasena, String rol) {
+        UsuarioModel usuario = null;
+        String consulta = "INSERT INTO Usuarios (nombre, correo, contrasena, rol) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
+                "root", "Perfect97"); PreparedStatement pst = conn.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS)) {
+
+            pst.setString(1, nombre);
+            pst.setString(2, correo);
+            pst.setString(3, contrasena);
+            pst.setString(4, rol);
+
+            int filasAfectadas = pst.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                try (ResultSet rs = pst.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int idGenerado = rs.getInt(1);
+                        usuario = new UsuarioModel(idGenerado, nombre, correo, contrasena, rol);
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return usuario;
+    }
+
+    
 }

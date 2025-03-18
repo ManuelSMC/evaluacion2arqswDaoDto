@@ -94,9 +94,6 @@ public class Calificacion {
         this.materia = materia;
     }
     
-    
-    
-    
     public List<Calificacion> getCalificacionGrupo(int idGrupo) {
         List<Calificacion> calificaciones = new ArrayList<>();
         try {
@@ -141,7 +138,85 @@ public class Calificacion {
         return calificaciones;
     }
 
+    
+    public List<Calificacion> obtenerCalificacionesPorMateriaGrupo(int idMateria, int idGrupo, int idMaestro) {
+        List<Calificacion> calificaciones = new ArrayList<>();
+        
+        try {
+            Connection conn;
+            ResultSet rs;
+            PreparedStatement pst;
+            String consulta;
+            
+            consulta = "SELECT c.id, u.nombre AS nombre_alumno, c.calificacion "
+                + "FROM Calificaciones c "
+                + "JOIN Alumnos al ON c.id_alumno = al.id "
+                + "JOIN Usuarios u ON al.id_usuario = u.id "
+                + "JOIN MaestroMateriaGrupo mmg ON c.id_asignacion = mmg.id "
+                + "WHERE mmg.id_materia = ? AND mmg.id_grupo = ? AND mmg.id_maestro = ? AND al.id_grupo = mmg.id_grupo";
+            
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
+                    "root",
+                    "Perfect97");
+            
+            pst = conn.prepareStatement(consulta);
 
+            pst.setInt(1, idMateria);
+            pst.setInt(2, idGrupo);
+            pst.setInt(3, idMaestro);
+            
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                Calificacion calificacion = new Calificacion();
+                calificacion.setId(rs.getInt("id"));
+                calificacion.setNombreAlumno(rs.getString("nombre_alumno"));
+                calificacion.setCalificacion(rs.getDouble("calificacion"));
+                calificaciones.add(calificacion);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return calificaciones;
+    }
+
+    
+    public boolean registrarCalificacion(int idAlumno, int idGrupo, int idMaestro, int idMateria, double calificacion){
+        boolean resultado = false;
+        
+        try {
+            Connection conn;
+            ResultSet rs;
+            PreparedStatement pst;
+            String consulta;
+            
+            
+            consulta = "INSERT INTO calificaciones (id_alumno, id_asignacion, calificacion) " +
+                          "VALUES (?, (SELECT id FROM MaestroMateriaGrupo WHERE id_materia = ? AND id_grupo = ? AND id_maestro = ? LIMIT 1), ?)";
+            
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
+                    "root",
+                    "Perfect97");
+            
+            pst = conn.prepareStatement(consulta);
+
+            pst.setInt(1, idAlumno);
+            pst.setInt(2, idMateria);
+            pst.setInt(3, idGrupo);
+            pst.setInt(4, idMaestro);
+            pst.setDouble(5, calificacion);
+
+            int filasAfectadas = pst.executeUpdate();
+            resultado = filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultado;
+    }
     
 }
 

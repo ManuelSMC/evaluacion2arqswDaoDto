@@ -13,7 +13,9 @@
         
         <div class="text-center mt-3">
             <a href="grupos" class="btn btn-secondary">Volver a Grupos</a>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#asignarModal">Asignar Horario</button>
+            <c:if test="${usuario.rol == 'Coordinador'}">        
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#asignarModal">Asignar Horario</button>
+            </c:if>
         </div>
         <br>
         <table class="table table-striped table-bordered mt-4">
