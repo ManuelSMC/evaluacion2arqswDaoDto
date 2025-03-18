@@ -140,4 +140,72 @@ public class Grupo {
         
     }
     
+    public List<Grupo> obtenerGrupos() {
+        List<Grupo> grupos = new ArrayList<>();
+
+        try {
+            Connection conn;
+            ResultSet rs;
+            PreparedStatement pst;
+            String consulta;
+
+            consulta = "SELECT * FROM grupos";
+            
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
+                    "root",
+                    "Perfect97");
+            pst = conn.prepareStatement(consulta);
+
+            rs = pst.executeQuery();
+            
+            while (rs.next()) {
+                Carrera carrera = new Carrera();
+                carrera = carrera.getById(rs.getInt("id_carrera"));
+                Grupo grupo = new Grupo(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getInt("id_carrera"),
+                        carrera
+                );
+                grupos.add(grupo);
+               
+            }
+            return grupos;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+        
+    }
+    
+    public void addGrupo(int idCarrera, String nombreGrupo){
+        
+        try {
+            Connection conn;
+            ResultSet rs;
+            PreparedStatement pst;
+            String consulta;
+            
+            
+            consulta = "INSERT INTO grupos (nombre, id_carrera) VALUES (?, ?)";
+            
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
+                    "root",
+                    "Perfect97");
+            
+            pst = conn.prepareStatement(consulta);
+
+            pst.setString(1, nombreGrupo);
+            pst.setInt(2, idCarrera);
+
+            pst.executeUpdate();
+            
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

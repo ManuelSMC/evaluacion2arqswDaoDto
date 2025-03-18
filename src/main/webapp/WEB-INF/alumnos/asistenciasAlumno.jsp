@@ -11,9 +11,16 @@
 
     <div class="container my-5">
         <h2 class="text-center">Asistencias de la Materia - <span class="text-primary">${nombre_materia}</span></h2>
-
         <div class="text-center mt-3">
-            <a href="materiasAlumno" class="btn btn-secondary">Volver a materias</a>
+            
+            <c:if test="${usuario.rol != 'Servicios Escolares'}">
+                <a href="materiasAlumno" class="btn btn-secondary">Volver a materias</a>
+            </c:if>
+            
+            <c:if test="${usuario.rol == 'Servicios Escolares'}">
+                <a href="materiasAlumno?idUsuario=${idUsuario}" class="btn btn-secondary">Volver a materias</a>
+            </c:if>
+                
         </div>
         <br>
         <table class="table table-striped table-bordered">

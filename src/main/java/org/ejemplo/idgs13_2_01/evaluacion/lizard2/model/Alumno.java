@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -283,5 +284,21 @@ public class Alumno {
         return listaAlumnos;
     }
 
+    public void addAlumno(int idUsuario, int idGrupo) {
+        String consulta = "INSERT INTO alumnos (id_usuario, id_grupo) VALUES (?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
+                "root", "Perfect97"); PreparedStatement pst = conn.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS)) {
+
+            pst.setInt(1, idUsuario);
+            pst.setInt(2, idGrupo);
+
+            pst.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     
 }

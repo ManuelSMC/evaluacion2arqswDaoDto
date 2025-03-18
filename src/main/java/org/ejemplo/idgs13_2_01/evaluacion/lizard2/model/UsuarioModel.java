@@ -179,5 +179,84 @@ public class UsuarioModel {
         return usuario;
     }
 
+    public List<UsuarioModel> getUsuarios(String rolUsuario) {
+        List<UsuarioModel> usuarios = new ArrayList<>();
+        
+
+        try {
+            Connection conn;
+            ResultSet rs;
+            PreparedStatement pst;
+            String consulta;
+
+            consulta = "SELECT * FROM usuarios WHERE rol = ?";
+            
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
+                    "root",
+                    "Perfect97");
+            
+            pst = conn.prepareStatement(consulta);
+
+            pst.setString(1, rolUsuario);
+            
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                UsuarioModel usuario = new UsuarioModel();
+                usuario.setId(rs.getInt("id"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setCorreo(rs.getString("correo"));
+                usuario.setContrasena(rs.getString("contrasena"));
+                usuario.setRol(rs.getString("rol"));
+                usuarios.add(usuario);
+            }
+            return usuarios;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+        
+    }
+    
+    public List<UsuarioModel> getUsuariosAlumnos(String rolUsuario) {
+        List<UsuarioModel> usuarios = new ArrayList<>();
+        
+
+        try {
+            Connection conn;
+            ResultSet rs;
+            PreparedStatement pst;
+            String consulta;
+
+            consulta = "SELECT u.id, u.nombre, u.correo, u.contrasena, u.rol FROM Usuarios u " +
+                   "JOIN Alumnos a ON u.id = a.id_usuario " +
+                   "WHERE u.rol = ? AND a.id_padre IS NULL";
+            
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
+                    "root",
+                    "Perfect97");
+            
+            pst = conn.prepareStatement(consulta);
+
+            pst.setString(1, rolUsuario);
+            
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                UsuarioModel usuario = new UsuarioModel();
+                usuario.setId(rs.getInt("id"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setCorreo(rs.getString("correo"));
+                usuario.setContrasena(rs.getString("contrasena"));
+                usuario.setRol(rs.getString("rol"));
+                usuarios.add(usuario);
+            }
+            return usuarios;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+        
+    }
     
 }

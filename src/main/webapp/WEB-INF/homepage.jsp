@@ -1,4 +1,5 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -41,16 +42,28 @@
 
                 <c:if test="${usuario.rol == 'SuperUsuario'}">
                     <div class="col-md-3">
-                        <a href="coordinadores" class="btn btn-primary btn-lg w-100">Coordinadores</a>
+                        <a href="tipoUsuario?rol=Coordinador" class="btn btn-primary btn-lg w-100">Coordinadores</a>
                     </div>
                     <div class="col-md-3">
-                        <a href="directores" class="btn btn-primary btn-lg w-100">Directores</a>
+                        <a href="tipoUsuario?rol=Director" class="btn btn-primary btn-lg w-100">Directores</a>
                     </div>
                     <div class="col-md-3">
-                        <a href="recursosHumanos" class="btn btn-primary btn-lg w-100">Recursos Humanos</a>
+                        <a href="tipoUsuario?rol=${fn:escapeXml('Recursos Humanos')}" class="btn btn-primary btn-lg w-100">Recursos Humanos</a>
                     </div>
                     <div class="col-md-3">
-                        <a href="serviciosEscolares" class="btn btn-primary btn-lg w-100">Servicios Escolares</a>
+                        <a href="tipoUsuario?rol=${fn:escapeXml('Servicios Escolares')}" class="btn btn-primary btn-lg w-100">Servicios Escolares</a>
+                    </div>
+                </c:if>
+                
+                <c:if test="${usuario.rol == 'Servicios Escolares'}">
+                    <div class="col-md-3">
+                        <a href="grupos" class="btn btn-primary btn-lg w-100">Grupos</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="alumnos" class="btn btn-primary btn-lg w-100">Alumnos</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="padres" class="btn btn-primary btn-lg w-100">Padres</a>
                     </div>
                 </c:if>
             </div>

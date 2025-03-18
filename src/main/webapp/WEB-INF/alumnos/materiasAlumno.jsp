@@ -11,7 +11,14 @@
 
     <div class="container my-5">
         <h2 class="text-center">Materias de <span class="text-primary">${usuario.nombre}</span></h2>
-
+        <c:if test="${usuario.rol == 'Servicios Escolares'}">
+            <div class="text-center mt-3">
+                <a href="alumnos" class="btn btn-secondary">Volver a alumnos</a>
+            </div>
+            <br>
+        </c:if>
+                
+        
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
@@ -26,7 +33,12 @@
                         <td>${materiaCalificacion.materia.nombre}</td>
                         <td>${materiaCalificacion.calificacion}</td>
                         <td>
+                            <c:if test="${usuario.rol != 'Servicios Escolares'}">
                             <a href="asistenciasAlumno?idMateria=${materiaCalificacion.materia.id}" class="btn btn-info btn-sm">Ver Asistencias</a>
+                            </c:if>
+                            <c:if test="${usuario.rol == 'Servicios Escolares'}">
+                            <a href="asistenciasAlumno?idMateria=${materiaCalificacion.materia.id}&idUsuario=${idUsuario}" class="btn btn-info btn-sm">Ver Asistencias</a>
+                            </c:if>
                         </td>
                     </tr>
                 </c:forEach>

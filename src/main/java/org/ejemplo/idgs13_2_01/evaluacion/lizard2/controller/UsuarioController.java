@@ -21,6 +21,7 @@ public class UsuarioController extends HttpServlet {
     List<Asistencia> asistencias;
     Padre padre = new Padre();
     String ruta = "";
+    int idMateria;
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -58,9 +59,17 @@ public class UsuarioController extends HttpServlet {
                     alumno = alumno.getByIdPadre(idPadre);
                     usuario = usuario.findById(alumno.getIdUsuario());
                     request.setAttribute("usuario", usuario);
+                    alumno = alumno.getById(usuario.getId());
+                }else  if (usuario.getRol().equals("Servicios Escolares")) {
+                    String intIdUsuario = request.getParameter("idUsuario");
+                    int idUsuario = Integer.parseInt(intIdUsuario);
+                    request.setAttribute("idUsuario", idUsuario);
+                    alumno = alumno.getById(idUsuario);
+                }else{
+                    alumno = alumno.getById(usuario.getId());
                 }
                 
-                alumno = alumno.getById(usuario.getId());
+                
                 /*System.out.println("AlumnoId: " + alumno.getId());
                 System.out.println("AlumnoIdGrupo: " + alumno.getIdGrupo());
                 System.out.println("AlumnoIdPadre: " + alumno.getIdPadre());
@@ -92,13 +101,28 @@ public class UsuarioController extends HttpServlet {
                     
                     alumno = alumno.getByIdPadre(idPadre);
                     usuario = usuario.findById(alumno.getIdUsuario());
+                    String idMateriaStr = request.getParameter("idMateria");
+                    idMateria = Integer.parseInt(idMateriaStr);
+                
+                    alumno = alumno.getById(usuario.getId());
+                }else  if (usuario.getRol().equals("Servicios Escolares")) {
+                    String intIdUsuarioReal = request.getParameter("idUsuario");
+                    int idUsuario = Integer.parseInt(intIdUsuarioReal);
+                    request.setAttribute("idUsuario", idUsuario);
+                    
+                    String idMateriaStr = request.getParameter("idMateria");
+                    idMateria = Integer.parseInt(idMateriaStr);
+                
+                    alumno = alumno.getById(idUsuario);
+                }else{
+                    String idMateriaStr = request.getParameter("idMateria");
+                    idMateria = Integer.parseInt(idMateriaStr);
+                
+                    alumno = alumno.getById(usuario.getId());
                 }
                 
                 
-                String idMateriaStr = request.getParameter("idMateria");
-                int idMateria = Integer.parseInt(idMateriaStr);
                 
-                alumno = alumno.getById(usuario.getId());
                 /*System.out.println("AlumnoId: " + alumno.getId());
                 System.out.println("AlumnoIdGrupo: " + alumno.getIdGrupo());
                 System.out.println("AlumnoIdPadre: " + alumno.getIdPadre());
@@ -156,6 +180,8 @@ public class UsuarioController extends HttpServlet {
                 }else if(usuario.getRol().equals("Recursos Humanos")){
                     response.sendRedirect("homepage");
                 }else if(usuario.getRol().equals("SuperUsuario")){
+                    response.sendRedirect("homepage");
+                }else if(usuario.getRol().equals("Servicios Escolares")){
                     response.sendRedirect("homepage");
                 }
             } else {

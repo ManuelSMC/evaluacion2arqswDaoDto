@@ -8,13 +8,14 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.net.URLEncoder;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.UsuarioModel;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Carrera;
 
-@WebServlet(name = "SuperUsuarioController", urlPatterns = {"/coordinadores", "/registrarCoordinador", "/directores", "/registrarDirector", "/recursosHumanos", "/registrarRecursosHumanos", "/serviciosEscolares", "/registrarServiciosEscolares"})
+@WebServlet(name = "SuperUsuarioController", urlPatterns = {"/tipoUsuario", "/registrarUsuario"})
 public class SuperUsuarioController extends HttpServlet {
-    Carrera carrera = new Carrera();
-    List<Carrera> carreras;
+    
+    UsuarioModel usuario = new UsuarioModel();
+    List<UsuarioModel> usuarios;
     
     String ruta = "";
     
@@ -28,17 +29,19 @@ public class SuperUsuarioController extends HttpServlet {
         ruta = request.getServletPath();
         
         switch (ruta) {
-            case "/carreras":
+            case "/tipoUsuario":
                 if (usuario == null) {
                     response.sendRedirect("login");
                     return;
                 }
+                String rolUsuario = request.getParameter("rol");
+                request.setAttribute("rol", rolUsuario);
+                usuarios = usuario.getUsuarios(rolUsuario);
                 
-                carreras = carrera.getCarreras();
-                
-                request.setAttribute("carreras", carreras);
-                request.getRequestDispatcher("/WEB-INF/carreras/carreras.jsp").forward(request, response);
+                request.setAttribute("usuarios", usuarios);
+                request.getRequestDispatcher("/WEB-INF/usuarios/usuarios.jsp").forward(request, response);
                 break;
+            
                 
             default:
                 throw new AssertionError();
@@ -50,12 +53,15 @@ public class SuperUsuarioController extends HttpServlet {
             throws ServletException, IOException {
         ruta = request.getServletPath();
 
-        if ("/registrarCarrera".equals(ruta)) {
-            String nombreCarrera = request.getParameter("nombre");
+        if ("/registrarUsuario".equals(ruta)) {
+            String nombre = request.getParameter("nombre");
+            String correo = request.getParameter("correo");
+            String contrasena = request.getParameter("contrasena");
+            String rol = request.getParameter("rol");
             
-            carrera.addCarrera(nombreCarrera);
+            usuario.addUsuario(nombre, correo, contrasena, rol);
 
-            response.sendRedirect("carreras?msg=success");
+            response.sendRedirect("tipoUsuario?rol=" + URLEncoder.encode(rol, "UTF-8"));
         }
     }
 

@@ -13,9 +13,10 @@ import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Grupo;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Horario;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Materia;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Calificacion;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Carrera;
 
 
-@WebServlet(name = "GrupoController", urlPatterns = {"/grupos", "/horarioGrupo", "/asignarHorario", "/reporteCalificaciones"})
+@WebServlet(name = "GrupoController", urlPatterns = {"/grupos", "/horarioGrupo", "/asignarHorario", "/reporteCalificaciones", "/registrarGrupo"})
 public class GrupoController extends HttpServlet {
     Grupo grupo = new Grupo();
     Horario horario = new Horario();
@@ -44,7 +45,16 @@ public class GrupoController extends HttpServlet {
                     return;
                 }
                 
-                List<Grupo> grupos = grupo.getGrupos();
+                if (usuario.getRol().equals("Servicios Escolares")) {
+                    
+                    Carrera carrera = new Carrera();
+                    List<Carrera> carreras;
+                    
+                    carreras = carrera.getCarreras();
+                    request.setAttribute("carreras", carreras);
+                }
+                
+                List<Grupo> grupos = grupo.obtenerGrupos();
                 
                 request.setAttribute("grupos", grupos);
                 request.getRequestDispatcher("/WEB-INF/grupos/grupos.jsp").forward(request, response);
@@ -65,7 +75,6 @@ public class GrupoController extends HttpServlet {
                 
                 List<Horario> horarioGrupo = horario.getHorarioGrupo(idGrupo);
                 
-                // datos para los inserts del modal
                 List<Materia> materias = materia.getMaterias();
                 request.setAttribute("materias", materias);
 
@@ -101,7 +110,6 @@ public class GrupoController extends HttpServlet {
         ruta = request.getServletPath();
 
         if ("/asignarHorario".equals(ruta)) {
-            // Obtener parámetros del formulario
             System.out.println("entró a asignarHorario");
             System.out.println("idGrupo: " + request.getParameter("idGrupo"));
             int idGrupo = Integer.parseInt(request.getParameter("idGrupo"));
@@ -116,6 +124,16 @@ public class GrupoController extends HttpServlet {
             boolean asignado = horario.addHorario(idGrupo, idMateria, dia, hora_inicio, hora_fin);
             
             response.sendRedirect("horarioGrupo?idGrupo=" + idGrupo + "&msg=success");
+            
+            
+        }else if ("/registrarGrupo".equals(ruta)) {
+            int idCarrera = Integer.parseInt(request.getParameter("idCarrera"));
+            String nombreGrupo = request.getParameter("nombreGrupo");
+            
+            
+            grupo.addGrupo(idCarrera, nombreGrupo);
+            
+            response.sendRedirect("grupos?msg=success");
             
             
         }
