@@ -69,6 +69,8 @@ public class UsuarioModel {
         this.rol = rol;
     }
     
+    ConnSingleton conexion = ConnSingleton.getInstance();
+
     public UsuarioModel loginUsuario(String correo, String contrasena){
         try {
             Connection conn;
@@ -77,10 +79,7 @@ public class UsuarioModel {
             String consulta;
 
             consulta = "SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?";
-
-            //driver para mysql8
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true", "root", "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
             pst.setString(1, correo);
@@ -94,11 +93,9 @@ public class UsuarioModel {
                 usuario.setCorreo(rs.getString("correo"));
                 usuario.setContrasena(rs.getString("contrasena"));
                 usuario.setRol(rs.getString("rol"));
-                conn.close();
                 return usuario;
             }
             
-
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -118,9 +115,7 @@ public class UsuarioModel {
 
             consulta = "SELECT * FROM usuarios WHERE id = ?";
 
-            //driver para mysql8
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true", "root", "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
             pst.setInt(1, id_usuario);
@@ -133,7 +128,6 @@ public class UsuarioModel {
                 usuario.setCorreo(rs.getString("correo"));
                 usuario.setContrasena(rs.getString("contrasena"));
                 usuario.setRol(rs.getString("rol"));
-                conn.close();
                 return usuario;
             }
             
@@ -152,10 +146,9 @@ public class UsuarioModel {
         UsuarioModel usuario = null;
         String consulta = "INSERT INTO Usuarios (nombre, correo, contrasena, rol) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                "root", "Perfect97"); PreparedStatement pst = conn.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS)) {
-
+        try (Connection conn = conexion.getConnection();
+             PreparedStatement pst = conn.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS)) {
+            
             pst.setString(1, nombre);
             pst.setString(2, correo);
             pst.setString(3, contrasena);
@@ -172,14 +165,13 @@ public class UsuarioModel {
                 }
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
         return usuario;
     }
 
-    public List<UsuarioModel> getUsuarios(String rolUsuario) {
+    public List<UsuarioModel> getUsuarios(String rolUsuario){
         List<UsuarioModel> usuarios = new ArrayList<>();
         
 
@@ -191,10 +183,7 @@ public class UsuarioModel {
 
             consulta = "SELECT * FROM usuarios WHERE rol = ?";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
 
@@ -213,12 +202,15 @@ public class UsuarioModel {
             return usuarios;
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Materia.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
         return null;
         
     }
     
-    public List<UsuarioModel> getUsuariosAlumnos(String rolUsuario) {
+    public List<UsuarioModel> getUsuariosAlumnos(String rolUsuario){
         List<UsuarioModel> usuarios = new ArrayList<>();
         
 
@@ -232,10 +224,7 @@ public class UsuarioModel {
                    "JOIN Alumnos a ON u.id = a.id_usuario " +
                    "WHERE u.rol = ? AND a.id_padre IS NULL";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
 
@@ -254,6 +243,9 @@ public class UsuarioModel {
             return usuarios;
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Materia.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
         return null;
         

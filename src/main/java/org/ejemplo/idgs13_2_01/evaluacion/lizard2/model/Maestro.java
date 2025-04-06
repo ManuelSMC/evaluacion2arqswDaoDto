@@ -38,6 +38,8 @@ public class Maestro {
         this.usuario = usuario;
     }
 
+    ConnSingleton conexion = ConnSingleton.getInstance();
+    
     public List<Maestro> getMaestros() {
         try {
             Connection conn;
@@ -49,9 +51,8 @@ public class Maestro {
 
             UsuarioModel usuario = new UsuarioModel();
             
-            //driver para mysql8
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true", "root", "Perfect97");
+            conn = conexion.getConnection();
+            
             pst = conn.prepareStatement(consulta);
             rs = pst.executeQuery();
             
@@ -62,7 +63,6 @@ public class Maestro {
                 maestro.setUsuario(usuario.findById(rs.getInt("id_usuario")));
                 maestros.add(maestro);
             }
-            conn.close();
             return maestros;
 
         } catch (ClassNotFoundException ex) {
@@ -84,10 +84,7 @@ public class Maestro {
 
             consulta = "SELECT * FROM maestros WHERE id = ?";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
 
             pst = conn.prepareStatement(consulta);
 
@@ -100,13 +97,14 @@ public class Maestro {
                 UsuarioModel usuario = new UsuarioModel();
                 usuario = usuario.findById(rs.getInt("id_usuario"));
                 String nombreMaestro = usuario.getNombre();
-                conn.close();
                 return nombreMaestro;
             }
             
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -128,10 +126,8 @@ public class Maestro {
                     + "JOIN Carreras c ON g.id_carrera = c.id "
                     + "WHERE ma.id = ?";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
+            
             pst = conn.prepareStatement(consulta);
 
             pst.setInt(1, idUsuario);
@@ -151,6 +147,8 @@ public class Maestro {
             return grupos;
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
         
@@ -172,10 +170,8 @@ public class Maestro {
                     + "JOIN Grupos g ON mmg.id_grupo = g.id "
                     + "WHERE mmg.id_maestro = ? AND mmg.id_grupo = ?";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
+            
             pst = conn.prepareStatement(consulta);
 
             pst.setInt(1, idMaestro);
@@ -192,6 +188,8 @@ public class Maestro {
             return materias;
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
         
@@ -204,11 +202,7 @@ public class Maestro {
             PreparedStatement verificarPst;
             String consulta;
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
-            
+            conn = conexion.getConnection();
             
             String verificarSql = "SELECT COUNT(*) FROM maestromateriagrupo WHERE id_maestro = ? AND id_materia = ? AND id_grupo = ?";
             verificarPst = conn.prepareStatement(verificarSql);
@@ -217,12 +211,10 @@ public class Maestro {
             verificarPst.setInt(3, idGrupo);
             ResultSet rs = verificarPst.executeQuery();
             if (rs.next() && rs.getInt(1) > 0) {
-                return false; // ya existe ese insert, entonces no se inserta uno nuevo
+                return false; // ya existe ese insert entonces no se inserta uno nuevo
             }
             
             consulta = "INSERT INTO maestromateriagrupo (id_maestro, id_materia, id_grupo) VALUES (?, ?, ?)";
-
-
 
             pst = conn.prepareStatement(consulta);
 
@@ -235,9 +227,10 @@ public class Maestro {
             
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        return false;
     }
     
     
@@ -250,10 +243,7 @@ public class Maestro {
 
             consulta = "SELECT id FROM maestros WHERE id_usuario = ?";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
 
             pst = conn.prepareStatement(consulta);
 
@@ -267,6 +257,8 @@ public class Maestro {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -280,10 +272,7 @@ public class Maestro {
 
             consulta = "INSERT INTO maestros (id_usuario) VALUES (?)";
 
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
 
             pst = conn.prepareStatement(consulta);
 
@@ -291,6 +280,8 @@ public class Maestro {
             pst.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

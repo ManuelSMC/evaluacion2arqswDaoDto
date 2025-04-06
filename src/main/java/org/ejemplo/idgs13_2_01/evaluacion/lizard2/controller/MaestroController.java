@@ -84,7 +84,7 @@ public class MaestroController extends HttpServlet {
                 List<Grupo> grupos = maestro.obtenerGrupos(idMaestro);
                 request.setAttribute("grupos", grupos);
 
-                // Datos para los inserts del modal
+                // datos para los inserts del modal
                 materias = materia.getMaterias();
                 request.setAttribute("materias", materias);
 

@@ -56,6 +56,7 @@ public class MaestroMateriaGrupo {
         this.idGrupo = idGrupo;
     }
     
+    ConnSingleton conexion = ConnSingleton.getInstance();
     
     public MaestroMateriaGrupo getById(int id_asignacion){
         
@@ -67,9 +68,7 @@ public class MaestroMateriaGrupo {
 
             consulta = "SELECT * FROM maestromateriagrupo WHERE id = ?";
 
-            //driver para mysql8
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true", "root", "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
             pst.setInt(1, id_asignacion);
@@ -81,7 +80,6 @@ public class MaestroMateriaGrupo {
                 maestroMateriaGrupo.setIdMaestro(rs.getInt("id_maestro"));
                 maestroMateriaGrupo.setIdMateria(rs.getInt("id_materia"));
                 maestroMateriaGrupo.setIdGrupo(rs.getInt("id_grupo"));
-                conn.close();
                 return maestroMateriaGrupo;
             }
             

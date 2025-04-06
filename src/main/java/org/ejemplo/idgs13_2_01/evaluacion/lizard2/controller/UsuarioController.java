@@ -8,15 +8,22 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.UsuarioModel;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Alumno;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Calificacion;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Asistencia;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.ConnSingleton;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Materia;
 import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Padre;
 
 @WebServlet(name = "UsuarioController", urlPatterns = {"/login", "/materiasAlumno", "/asistencias", "/cerrar-sesion", "/asistenciasAlumno", "/homepage"})
 public class UsuarioController extends HttpServlet {
+    
+    ConnSingleton conexion = ConnSingleton.getInstance();
+    
     UsuarioModel usuarioModel = new UsuarioModel();
     List<Asistencia> asistencias;
     Padre padre = new Padre();
@@ -43,9 +50,10 @@ public class UsuarioController extends HttpServlet {
                 
             case "/cerrar-sesion":
                 request.getSession().invalidate();
-                
+
                 response.sendRedirect("login");
                 break;
+
                 
             case "/materiasAlumno":
                 if (usuario == null) {
@@ -165,8 +173,10 @@ public class UsuarioController extends HttpServlet {
             String correo = request.getParameter("username");
             String contrasena = request.getParameter("password");
 
+            // mostrar la conexión para probar que singleton funciona
             UsuarioModel usuario = usuarioModel.loginUsuario(correo, contrasena);
-
+            
+            System.out.println("Conexion bd login: " + conexion.getConn());
             if (usuario != null) {
                 request.getSession().setAttribute("usuario", usuario);
                 if (usuario.getRol().equals("Alumno") || usuario.getRol().equals("Padre")) {

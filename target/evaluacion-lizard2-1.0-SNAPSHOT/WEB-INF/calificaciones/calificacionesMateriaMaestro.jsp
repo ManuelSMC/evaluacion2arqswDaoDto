@@ -37,7 +37,6 @@
         </table>
     </div>
 
-    <!-- Modal para agregar calificación -->
     <!-- Modal -->
     <div class="modal fade" id="modalAgregarCalificacion" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

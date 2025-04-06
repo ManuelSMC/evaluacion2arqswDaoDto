@@ -66,7 +66,7 @@ public class Grupo {
         this.Carrera = Carrera;
     }
 
-    
+    ConnSingleton conexion = ConnSingleton.getInstance();
     
     public String getGrupo(int idGrupo) {
         
@@ -78,10 +78,7 @@ public class Grupo {
 
             consulta = "SELECT * FROM grupos WHERE id = ?";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
 
             pst = conn.prepareStatement(consulta);
 
@@ -90,13 +87,14 @@ public class Grupo {
             
             if (rs.next()) {
                 String nombreGrupo = rs.getString("nombre");
-                conn.close();
                 return nombreGrupo;
             }
             
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -110,9 +108,7 @@ public class Grupo {
 
             consulta = "SELECT * FROM grupos";
 
-            //driver para mysql8
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true", "root", "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
             rs = pst.executeQuery();
@@ -126,7 +122,6 @@ public class Grupo {
                 grupo.setIdCarrera(rs.getInt("id_carrera"));
                 listaGrupos.add(grupo);
             }
-            conn.close();
             return listaGrupos;
             
 
@@ -151,10 +146,8 @@ public class Grupo {
 
             consulta = "SELECT * FROM grupos";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
+            
             pst = conn.prepareStatement(consulta);
 
             rs = pst.executeQuery();
@@ -174,6 +167,8 @@ public class Grupo {
             return grupos;
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
         
@@ -190,10 +185,7 @@ public class Grupo {
             
             consulta = "INSERT INTO grupos (nombre, id_carrera) VALUES (?, ?)";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
 
@@ -205,6 +197,8 @@ public class Grupo {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

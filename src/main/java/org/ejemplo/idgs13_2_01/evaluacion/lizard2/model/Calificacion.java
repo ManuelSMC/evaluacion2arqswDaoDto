@@ -94,6 +94,8 @@ public class Calificacion {
         this.materia = materia;
     }
     
+    ConnSingleton conexion = ConnSingleton.getInstance();
+    
     public List<Calificacion> getCalificacionGrupo(int idGrupo) {
         List<Calificacion> calificaciones = new ArrayList<>();
         try {
@@ -111,9 +113,7 @@ public class Calificacion {
                     + "JOIN Materias m ON mmg.id_materia = m.id "
                     + "WHERE mmg.id_grupo = ?";
 
-            // Cargar driver y conectar
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true", "root", "Perfect97");
+            conn = conexion.getConnection();
 
             pst = conn.prepareStatement(consulta);
             pst.setInt(1, idGrupo);
@@ -131,7 +131,6 @@ public class Calificacion {
                 calificaciones.add(calificacion);
             }
 
-            conn.close();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Calificacion.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -155,10 +154,7 @@ public class Calificacion {
                 + "JOIN MaestroMateriaGrupo mmg ON c.id_asignacion = mmg.id "
                 + "WHERE mmg.id_materia = ? AND mmg.id_grupo = ? AND mmg.id_maestro = ? AND al.id_grupo = mmg.id_grupo";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
 
@@ -178,6 +174,8 @@ public class Calificacion {
             
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return calificaciones;
     }
@@ -196,10 +194,7 @@ public class Calificacion {
             consulta = "INSERT INTO calificaciones (id_alumno, id_asignacion, calificacion) " +
                           "VALUES (?, (SELECT id FROM MaestroMateriaGrupo WHERE id_materia = ? AND id_grupo = ? AND id_maestro = ? LIMIT 1), ?)";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
 
@@ -214,6 +209,8 @@ public class Calificacion {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultado;
     }

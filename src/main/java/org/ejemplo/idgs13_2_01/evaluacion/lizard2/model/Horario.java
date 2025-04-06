@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Horario {
     private int id;
@@ -84,9 +86,10 @@ public class Horario {
         this.horaFin = horaFin;
     }
 
+    ConnSingleton conexion = ConnSingleton.getInstance();
+    
     public List<Horario> getHorarioGrupo(int idGrupo) {
         List<Horario> horarioGrupo = new ArrayList<>();
-        Materia materia = new Materia();
         
         try {
             Connection conn;
@@ -96,10 +99,7 @@ public class Horario {
 
             consulta = "SELECT * FROM horarios WHERE id_grupo = ?";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
 
             pst = conn.prepareStatement(consulta);
 
@@ -107,6 +107,7 @@ public class Horario {
             rs = pst.executeQuery();
             
             while (rs.next()) {
+                Materia materia = new Materia();
                 int idMateria = rs.getInt("id_materia");
                 
                 materia = materia.obtenerMateriaPorId(idMateria);
@@ -123,11 +124,12 @@ public class Horario {
                 horarioGrupo.add(horario);
                  
             }
-            conn.close();  
             return horarioGrupo;
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -138,10 +140,7 @@ public class Horario {
             PreparedStatement pst;
             String consulta;
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
             
             consulta = "INSERT INTO horarios (id_grupo, id_materia, dia, hora_inicio, hora_fin) VALUES (?, ?, ?, ?, ?)";
             
@@ -158,9 +157,11 @@ public class Horario {
             
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        return false;
     }
     
 }

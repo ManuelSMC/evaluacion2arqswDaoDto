@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Padre {
     private int id;
@@ -35,6 +37,7 @@ public class Padre {
         this.idUsuario = idUsuario;
     }
 
+    ConnSingleton conexion = ConnSingleton.getInstance();
     
     public Integer getIdPadrePorUsuario(int id_usuario) {
         try {
@@ -45,10 +48,7 @@ public class Padre {
 
             consulta = "SELECT id FROM padres WHERE id_usuario = ?";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
 
             pst = conn.prepareStatement(consulta);
 
@@ -62,6 +62,8 @@ public class Padre {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }    catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -70,9 +72,8 @@ public class Padre {
         Padre padre = null;
         String consulta = "INSERT INTO padres (id_usuario) VALUES (?)";
 
-        try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                "root", "Perfect97"); PreparedStatement pst = conn.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = conexion.getConnection();
+             PreparedStatement pst = conn.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS)) {
 
             pst.setInt(1, idUsuario);
 
@@ -89,8 +90,9 @@ public class Padre {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return padre;
     }
     
@@ -105,10 +107,7 @@ public class Padre {
             
             consulta = "UPDATE alumnos SET id_padre = ? WHERE id = ?";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
 
@@ -120,6 +119,8 @@ public class Padre {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

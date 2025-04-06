@@ -38,6 +38,8 @@ public class Materia {
         this.nombre = nombre;
     }
 
+    ConnSingleton conexion = ConnSingleton.getInstance();
+    
     public Materia obtenerMateriaPorId(int id_materia) {
         Materia materia = null;
         
@@ -49,9 +51,7 @@ public class Materia {
 
             consulta = "SELECT * FROM materias WHERE id = ?";
 
-            //driver para mysql8
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true", "root", "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
             pst.setInt(1, id_materia);
@@ -63,7 +63,6 @@ public class Materia {
                     rs.getString("nombre")
                 );
             }
-            conn.close();
             return materia;
 
         } catch (ClassNotFoundException ex) {
@@ -84,9 +83,7 @@ public class Materia {
 
             consulta = "SELECT * FROM materias WHERE id = ?";
 
-            //driver para mysql8
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true", "root", "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
             pst.setInt(1, id_materia);
@@ -95,7 +92,6 @@ public class Materia {
             if (rs.next()) {
                 
                 String nombreMateria = rs.getString("nombre");
-                conn.close();
                 return nombreMateria;
             }
             
@@ -119,9 +115,7 @@ public class Materia {
 
             consulta = "SELECT * FROM materias";
 
-            //driver para mysql8
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true", "root", "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
             rs = pst.executeQuery();
@@ -134,7 +128,6 @@ public class Materia {
                 mat.setNombre(rs.getString("nombre"));
                 listaMaterias.add(mat);
             }
-            conn.close();
             return listaMaterias;
             
 
@@ -154,15 +147,10 @@ public class Materia {
             PreparedStatement pst;
             String consulta;
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
             
             consulta = "INSERT INTO materias (nombre) VALUES (?)";
-
-
-
+            
             pst = conn.prepareStatement(consulta);
 
             pst.setString(1, nombreMateria);
@@ -172,9 +160,10 @@ public class Materia {
             
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        return false;
     }
 }
 

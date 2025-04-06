@@ -38,6 +38,8 @@ public class Carrera {
         this.nombre = nombre;
     }
 
+    ConnSingleton conexion = ConnSingleton.getInstance();
+    
     public Carrera getById(int idCarrera) {
         
         try {
@@ -48,10 +50,7 @@ public class Carrera {
 
             consulta = "SELECT * FROM carreras WHERE id = ?";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
 
             pst = conn.prepareStatement(consulta);
 
@@ -69,6 +68,8 @@ public class Carrera {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -83,10 +84,7 @@ public class Carrera {
 
             consulta = "SELECT * FROM carreras";
 
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
 
             pst = conn.prepareStatement(consulta);
 
@@ -105,6 +103,8 @@ public class Carrera {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -120,10 +120,7 @@ public class Carrera {
             
             consulta = "INSERT INTO carreras (nombre) VALUES (?)";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
 
@@ -134,6 +131,8 @@ public class Carrera {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

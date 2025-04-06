@@ -37,7 +37,7 @@
                         <td>${alumno.nombre}</td>
                         <td>${alumno.correo}</td>
                         <td>
-                            <a href="materiasAlumno?idUsuario=${alumno.id}" class="btn btn-info btn-sm">Ver alumnos</a>
+                            <a href="materiasAlumno?idUsuario=${alumno.id}" class="btn btn-info btn-sm">Ver materias del alumno</a>
                         </td>
                     </tr>
                 </c:forEach>

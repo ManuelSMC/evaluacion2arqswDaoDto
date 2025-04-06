@@ -88,7 +88,7 @@ public class Asistencia {
         this.nombreAlumno = nombreAlumno;
     }
     
-    
+    ConnSingleton conexion = ConnSingleton.getInstance();
     
     public List<Asistencia> obtenerAsistenciasPorMateriaGrupo(int idMateria, int idGrupo, int idMaestro) {
         List<Asistencia> asistencias = new ArrayList<>();
@@ -106,10 +106,7 @@ public class Asistencia {
                 + "JOIN MaestroMateriaGrupo mmg ON a.id_asignacion = mmg.id "
                 + "WHERE mmg.id_materia = ? AND mmg.id_grupo = ? AND mmg.id_maestro = ? AND al.id_grupo = mmg.id_grupo";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
 
@@ -128,6 +125,8 @@ public class Asistencia {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return asistencias;
     }
@@ -146,10 +145,7 @@ public class Asistencia {
             consulta = "INSERT INTO Asistencias (id_alumno, id_asignacion, fecha, estado) " +
                           "VALUES (?, (SELECT id FROM MaestroMateriaGrupo WHERE id_materia = ? AND id_grupo = ? AND id_maestro = ? LIMIT 1), ?, ?)";
             
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/evaluacion2?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "Perfect97");
+            conn = conexion.getConnection();
             
             pst = conn.prepareStatement(consulta);
 
@@ -165,6 +161,8 @@ public class Asistencia {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }catch (ClassNotFoundException ex) {
+            Logger.getLogger(Alumno.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultado;
     }

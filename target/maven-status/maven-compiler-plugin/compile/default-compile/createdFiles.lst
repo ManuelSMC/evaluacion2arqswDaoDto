@@ -19,3 +19,4 @@ org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\Maestro.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\controller\UsuarioController.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\controller\GrupoController.class
 org\ejemplo\idgs13_2_01\evaluacion\lizard2\controller\SuperUsuarioController.class
+org\ejemplo\idgs13_2_01\evaluacion\lizard2\model\ConnSingleton.class
