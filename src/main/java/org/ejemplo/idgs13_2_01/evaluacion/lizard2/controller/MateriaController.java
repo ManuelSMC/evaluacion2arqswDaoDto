@@ -8,12 +8,15 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.UsuarioModel;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Materia;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.UsuarioModel;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.UsuarioModelDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Materia;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.MateriaDao;
 
 @WebServlet(name = "MateriaController", urlPatterns = {"/materias", "/registrarMateria"})
 public class MateriaController extends HttpServlet {
     Materia materia = new Materia();
+    MateriaDao materiaDao = new MateriaDao();
     List<Materia> materias;
     
     String ruta = "";
@@ -34,7 +37,7 @@ public class MateriaController extends HttpServlet {
                     return;
                 }
                 
-                materias = materia.getMaterias();
+                materias = materiaDao.getMaterias();
                 
                 request.setAttribute("materias", materias);
                 request.getRequestDispatcher("/WEB-INF/materias/materias.jsp").forward(request, response);
@@ -53,7 +56,7 @@ public class MateriaController extends HttpServlet {
         if ("/registrarMateria".equals(ruta)) {
             String nombreMateria = request.getParameter("nombreMateria");
             
-            materia.addMateria(nombreMateria);
+            materiaDao.addMateria(nombreMateria);
 
             response.sendRedirect("materias?msg=success");
         }

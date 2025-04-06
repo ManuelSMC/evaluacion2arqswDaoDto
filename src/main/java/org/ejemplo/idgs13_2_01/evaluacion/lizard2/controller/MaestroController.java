@@ -8,13 +8,20 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.UsuarioModel;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Maestro;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Grupo;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Materia;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Asistencia;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Calificacion;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Alumno;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.UsuarioModel;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.UsuarioModelDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Maestro;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.MaestroDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Grupo;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.GrupoDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Materia;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.MateriaDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Asistencia;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.AsistenciaDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Calificacion;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.CalificacionDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Alumno;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.AlumnoDao;
 
 @WebServlet(name = "MaestroController", urlPatterns = {"/maestros", "/gruposMaestro", "/materiasGrupoMaestro", "/asignarGrupoMateria", "/asistenciasMateriaMaestro",
     "/registrarAsistencia", "/calificacionesMateriaMaestro", "/registrarCalificacion", "/registrarMaestro"})
@@ -28,12 +35,19 @@ public class MaestroController extends HttpServlet {
     List<Alumno> alumnos;
 
     Asistencia asistencia = new Asistencia();
+    AsistenciaDao asistenciaDao = new AsistenciaDao();
     Calificacion calificacion = new Calificacion();
+    CalificacionDao calificacionDao = new CalificacionDao();
     Alumno alumno = new Alumno();
+    AlumnoDao alumnoDao = new AlumnoDao();
     Maestro maestro = new Maestro();
+    MaestroDao maestroDao = new MaestroDao();
     Materia materia = new Materia();
+    MateriaDao materiaDao = new MateriaDao();
     Grupo grupo = new Grupo();
+    GrupoDao grupoDao = new GrupoDao();
     UsuarioModel usuario = new UsuarioModel();
+    UsuarioModelDao usuarioDao = new UsuarioModelDao();
 
     String nombreMaestro;
     int idMateria;
@@ -56,7 +70,7 @@ public class MaestroController extends HttpServlet {
                     response.sendRedirect("login");
                     return;
                 }
-                List<Maestro> maestros = maestro.getMaestros();
+                List<Maestro> maestros = maestroDao.getMaestros();
                 request.setAttribute("maestros", maestros);
 
                 request.getRequestDispatcher("/WEB-INF/maestros/maestros.jsp").forward(request, response);
@@ -69,7 +83,7 @@ public class MaestroController extends HttpServlet {
 
                 if (usuario.getRol().equals("Maestro")) {
                     //System.out.println("IdUsuario: " + usuario.getId());
-                    idMaestro = maestro.getIdMaestroPorUsuario(usuario.getId());
+                    idMaestro = maestroDao.getIdMaestroPorUsuario(usuario.getId());
                     //System.out.println("IdMaestro: " + idMaestro);
                 } else {
                     intIdMaestro = request.getParameter("maestroId");
@@ -78,17 +92,17 @@ public class MaestroController extends HttpServlet {
 
                 request.setAttribute("idMaestro", idMaestro);
 
-                nombreMaestro = maestro.getMaestro(idMaestro);
+                nombreMaestro = maestroDao.getMaestro(idMaestro);
                 request.setAttribute("nombreMaestro", nombreMaestro);
 
-                List<Grupo> grupos = maestro.obtenerGrupos(idMaestro);
+                List<Grupo> grupos = maestroDao.obtenerGrupos(idMaestro);
                 request.setAttribute("grupos", grupos);
 
                 // datos para los inserts del modal
-                materias = materia.getMaterias();
+                materias = materiaDao.getMaterias();
                 request.setAttribute("materias", materias);
 
-                List<Grupo> gruposTotales = grupo.getGrupos();
+                List<Grupo> gruposTotales = grupoDao.getGrupos();
                 request.setAttribute("gruposTotales", gruposTotales);
 
                 request.getRequestDispatcher("/WEB-INF/maestros/gruposMaestro.jsp").forward(request, response);
@@ -102,7 +116,7 @@ public class MaestroController extends HttpServlet {
                 // System.out.println("Entre al doGet de materiasGrupoMaestro");
                 intIdMaestro = request.getParameter("idMaestro");
                 request.setAttribute("idMaestro", intIdMaestro);
-                nombreMaestro = maestro.getMaestro(idMaestro);
+                nombreMaestro = maestroDao.getMaestro(idMaestro);
                 request.setAttribute("nombreMaestro", nombreMaestro);
 
                 idMaestro = Integer.parseInt(intIdMaestro);
@@ -112,11 +126,11 @@ public class MaestroController extends HttpServlet {
                 int idGrupo = Integer.parseInt(intIdGrupo);
                 //System.out.println("idGrupo: " + idGrupo);
 
-                String nombreGrupo = grupo.getGrupo(idGrupo);
+                String nombreGrupo = grupoDao.getGrupo(idGrupo);
                 request.setAttribute("nombreGrupo", nombreGrupo);
                 request.setAttribute("idGrupo", idGrupo);
 
-                materias = maestro.obtenerMateriasGrupoMaestro(idMaestro, idGrupo);
+                materias = maestroDao.obtenerMateriasGrupoMaestro(idMaestro, idGrupo);
                 request.setAttribute("materias", materias);
 
                 request.getRequestDispatcher("/WEB-INF/materias/materiasGrupoMaestro.jsp").forward(request, response);
@@ -130,13 +144,13 @@ public class MaestroController extends HttpServlet {
                 request.setAttribute("idMaestro", idMaestro);
                 request.setAttribute("idMateria", idMateria);
 
-                List<Asistencia> asistencias = asistencia.obtenerAsistenciasPorMateriaGrupo(idMateria, idGrupo, idMaestro);
+                List<Asistencia> asistencias = asistenciaDao.obtenerAsistenciasPorMateriaGrupo(idMateria, idGrupo, idMaestro);
                 request.setAttribute("asistencias", asistencias);
 
-                nombreMateria = materia.findById(idMateria);
+                nombreMateria = materiaDao.findById(idMateria);
                 request.setAttribute("nombre_materia", nombreMateria);
 
-                alumnos = alumno.getAlumnosGrupoMaestro(idGrupo, idMaestro, idMateria);
+                alumnos = alumnoDao.getAlumnosGrupoMaestro(idGrupo, idMaestro, idMateria);
                 request.setAttribute("alumnos", alumnos);
 
                 request.getRequestDispatcher("/WEB-INF/asistencias/asistenciasMateriaMaestro.jsp").forward(request, response);
@@ -150,13 +164,13 @@ public class MaestroController extends HttpServlet {
                 request.setAttribute("idMaestro", idMaestro);
                 request.setAttribute("idMateria", idMateria);
 
-                calificaciones = calificacion.obtenerCalificacionesPorMateriaGrupo(idMateria, idGrupo, idMaestro);
+                calificaciones = calificacionDao.obtenerCalificacionesPorMateriaGrupo(idMateria, idGrupo, idMaestro);
                 request.setAttribute("calificaciones", calificaciones);
 
-                nombreMateria = materia.findById(idMateria);
+                nombreMateria = materiaDao.findById(idMateria);
                 request.setAttribute("nombre_materia", nombreMateria);
 
-                alumnos = alumno.getAlumnosGrupoMaestro(idGrupo, idMaestro, idMateria);
+                alumnos = alumnoDao.getAlumnosGrupoMaestro(idGrupo, idMaestro, idMateria);
                 request.setAttribute("alumnos", alumnos);
 
                 request.getRequestDispatcher("/WEB-INF/calificaciones/calificacionesMateriaMaestro.jsp").forward(request, response);
@@ -177,7 +191,7 @@ public class MaestroController extends HttpServlet {
             int idMaestro = Integer.parseInt(request.getParameter("idMaestro"));
             int idMateria = Integer.parseInt(request.getParameter("idMateria"));
             int idGrupo = Integer.parseInt(request.getParameter("idGrupo"));
-            boolean asignado = maestro.asignarGrupoMateriaMaestro(idMaestro, idMateria, idGrupo);
+            boolean asignado = maestroDao.asignarGrupoMateriaMaestro(idMaestro, idMateria, idGrupo);
             if (asignado) {
                 response.sendRedirect("gruposMaestro?maestroId=" + idMaestro + "&msg=success");
             } else {
@@ -198,7 +212,7 @@ public class MaestroController extends HttpServlet {
                     String estado = request.getParameter("estado_" + idAlumno);
 
                     Asistencia asistencia = new Asistencia();
-                    boolean registroExitoso = asistencia.registrarAsistencia(idAlumno, idGrupo, idMateria, idMaestro, fecha, estado);
+                    boolean registroExitoso = asistenciaDao.registrarAsistencia(idAlumno, idGrupo, idMateria, idMaestro, fecha, estado);
 
                     if (!registroExitoso) {
                         request.setAttribute("error", "Ocurrió un error al registrar la asistencia.");
@@ -217,8 +231,8 @@ public class MaestroController extends HttpServlet {
             int idAlumno = Integer.parseInt(request.getParameter("idAlumno"));
             double calificacion = Double.parseDouble(request.getParameter("calificacion"));
 
-            Calificacion calif = new Calificacion();
-            calif.registrarCalificacion(idAlumno, idGrupo, idMaestro, idMateria, calificacion);
+            CalificacionDao calificacionDao = new CalificacionDao();
+            calificacionDao.registrarCalificacion(idAlumno, idGrupo, idMaestro, idMateria, calificacion);
 
             response.sendRedirect("calificacionesMateriaMaestro?idMateria=" + idMateria + "&idGrupo=" + idGrupo + "&idMaestro=" + idMaestro + "&msg=success");
             
@@ -228,8 +242,8 @@ public class MaestroController extends HttpServlet {
             String contrasena = request.getParameter("contrasena");
             String rol = request.getParameter("rol");
 
-            usuario = usuario.addUsuario(nombre, correo, contrasena, rol);
-            maestro.addMaestro(usuario.getId());
+            usuario = usuarioDao.addUsuario(nombre, correo, contrasena, rol);
+            maestroDao.addMaestro(usuario.getId());
             
             response.sendRedirect("maestros");
         }

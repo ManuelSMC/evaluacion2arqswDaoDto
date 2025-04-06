@@ -8,20 +8,30 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.UsuarioModel;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Grupo;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Horario;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Materia;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Calificacion;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Carrera;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.UsuarioModel;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.UsuarioModelDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Grupo;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.GrupoDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Horario;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.HorarioDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Materia;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.MateriaDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Calificacion;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.CalificacionDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Carrera;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.CarreraDao;
 
 
 @WebServlet(name = "GrupoController", urlPatterns = {"/grupos", "/horarioGrupo", "/asignarHorario", "/reporteCalificaciones", "/registrarGrupo"})
 public class GrupoController extends HttpServlet {
     Grupo grupo = new Grupo();
+    GrupoDao grupoDao = new GrupoDao();
     Horario horario = new Horario();
+    HorarioDao horarioDao = new HorarioDao();
     Materia materia = new Materia();
+    MateriaDao materiaDao = new MateriaDao();
     Calificacion calificacion = new Calificacion();
+    CalificacionDao calificacionDao = new CalificacionDao();
     String intIdGrupo;
     int idGrupo;
     String nombreGrupo;
@@ -48,13 +58,14 @@ public class GrupoController extends HttpServlet {
                 if (usuario.getRol().equals("Servicios Escolares")) {
                     
                     Carrera carrera = new Carrera();
+                    CarreraDao carreraDao = new CarreraDao();
                     List<Carrera> carreras;
                     
-                    carreras = carrera.getCarreras();
+                    carreras = carreraDao.getCarreras();
                     request.setAttribute("carreras", carreras);
                 }
                 
-                List<Grupo> grupos = grupo.obtenerGrupos();
+                List<Grupo> grupos = grupoDao.obtenerGrupos();
                 
                 request.setAttribute("grupos", grupos);
                 request.getRequestDispatcher("/WEB-INF/grupos/grupos.jsp").forward(request, response);
@@ -70,15 +81,15 @@ public class GrupoController extends HttpServlet {
                 idGrupo = Integer.parseInt(intIdGrupo);
                 request.setAttribute("idGrupo", idGrupo);
                 
-                nombreGrupo = grupo.getGrupo(idGrupo);
+                nombreGrupo = grupoDao.getGrupo(idGrupo);
                 request.setAttribute("nombreGrupo", nombreGrupo);
                 
-                List<Horario> horarioGrupo = horario.getHorarioGrupo(idGrupo);
+                List<Horario> horarioGrupo = horarioDao.getHorarioGrupo(idGrupo);
                 
-                List<Materia> materias = materia.getMaterias();
+                List<Materia> materias = materiaDao.getMaterias();
                 request.setAttribute("materias", materias);
 
-                List<Grupo> gruposTotales = grupo.getGrupos();
+                List<Grupo> gruposTotales = grupoDao.getGrupos();
                 request.setAttribute("gruposTotales", gruposTotales);
                 
                 request.setAttribute("horarioGrupo", horarioGrupo);
@@ -91,10 +102,10 @@ public class GrupoController extends HttpServlet {
                 idGrupo = Integer.parseInt(intIdGrupo);
                 request.setAttribute("idGrupo", idGrupo);
                 
-                nombreGrupo = grupo.getGrupo(idGrupo);
+                nombreGrupo = grupoDao.getGrupo(idGrupo);
                 request.setAttribute("nombreGrupo", nombreGrupo);
                 
-                List<Calificacion> calificaciones = calificacion.getCalificacionGrupo(idGrupo);
+                List<Calificacion> calificaciones = calificacionDao.getCalificacionGrupo(idGrupo);
                 request.setAttribute("calificaciones", calificaciones);
                 request.getRequestDispatcher("/WEB-INF/reportes/reporteCalificacionesGrupo.jsp").forward(request, response);
                 break;
@@ -115,13 +126,13 @@ public class GrupoController extends HttpServlet {
             int idGrupo = Integer.parseInt(request.getParameter("idGrupo"));
             System.out.println("idMateria: " + request.getParameter("idMateria"));
             int idMateria1 = Integer.parseInt(request.getParameter("idMateria"));
-            materia = materia.obtenerMateriaPorId(idMateria1);
+            materia = materiaDao.obtenerMateriaPorId(idMateria1);
             int idMateria = materia.getId();
             String dia = request.getParameter("dia");
             String hora_inicio = request.getParameter("horaInicio");
             String hora_fin = request.getParameter("horaFin");
 
-            boolean asignado = horario.addHorario(idGrupo, idMateria, dia, hora_inicio, hora_fin);
+            boolean asignado = horarioDao.addHorario(idGrupo, idMateria, dia, hora_inicio, hora_fin);
             
             response.sendRedirect("horarioGrupo?idGrupo=" + idGrupo + "&msg=success");
             
@@ -131,7 +142,7 @@ public class GrupoController extends HttpServlet {
             String nombreGrupo = request.getParameter("nombreGrupo");
             
             
-            grupo.addGrupo(idCarrera, nombreGrupo);
+            grupoDao.addGrupo(idCarrera, nombreGrupo);
             
             response.sendRedirect("grupos?msg=success");
             

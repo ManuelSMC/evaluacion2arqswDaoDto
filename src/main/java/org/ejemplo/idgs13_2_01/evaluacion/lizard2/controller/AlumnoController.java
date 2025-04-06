@@ -8,16 +8,21 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.UsuarioModel;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Grupo;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Alumno;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.UsuarioModel;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.UsuarioModelDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Grupo;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.GrupoDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Alumno;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.AlumnoDao;
 
 @WebServlet(name = "AlumnoController", urlPatterns = {"/alumnos", "/registrarAlumno"})
 public class AlumnoController extends HttpServlet {
     Alumno alumnoModel = new Alumno();
+    AlumnoDao alumnoModelDao = new AlumnoDao();
     UsuarioModel alumno = new UsuarioModel();
+    UsuarioModelDao alumnoDao = new UsuarioModelDao();
     List<UsuarioModel> alumnos;
-    
+    GrupoDao grupoDao = new GrupoDao();
     Grupo grupo = new Grupo();
     List<Grupo> grupos;
     
@@ -39,10 +44,10 @@ public class AlumnoController extends HttpServlet {
                     return;
                 }
                 
-                alumnos = alumno.getUsuarios("Alumno");
+                alumnos = alumnoDao.getUsuarios("Alumno");
                 request.setAttribute("alumnos", alumnos);
                 
-                grupos = grupo.getGrupos();
+                grupos = grupoDao.getGrupos();
                 request.setAttribute("grupos", grupos);
                 
                 request.getRequestDispatcher("/WEB-INF/alumnos/alumnos.jsp").forward(request, response);
@@ -67,8 +72,8 @@ public class AlumnoController extends HttpServlet {
             int idGrupo = Integer.parseInt(intIdGrupo);
             
                    //usuario
-            alumno = alumno.addUsuario(nombreAlumno, correoAlumno, contrasenaAlumno, "Alumno");
-            alumnoModel.addAlumno(alumno.getId(),idGrupo);
+            alumno = alumnoDao.addUsuario(nombreAlumno, correoAlumno, contrasenaAlumno, "Alumno");
+            alumnoModelDao.addAlumno(alumno.getId(),idGrupo);
             
             response.sendRedirect("alumnos?msg=success");
         }

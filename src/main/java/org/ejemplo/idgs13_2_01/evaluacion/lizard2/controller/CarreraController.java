@@ -8,12 +8,15 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.UsuarioModel;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Carrera;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.UsuarioModel;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.UsuarioModelDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Carrera;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.CarreraDao;
 
 @WebServlet(name = "CarreraController", urlPatterns = {"/carreras", "/registrarCarrera"})
 public class CarreraController extends HttpServlet {
     Carrera carrera = new Carrera();
+    CarreraDao carreraDao = new CarreraDao();
     List<Carrera> carreras;
     
     String ruta = "";
@@ -34,7 +37,7 @@ public class CarreraController extends HttpServlet {
                     return;
                 }
                 
-                carreras = carrera.getCarreras();
+                carreras = carreraDao.getCarreras();
                 
                 request.setAttribute("carreras", carreras);
                 request.getRequestDispatcher("/WEB-INF/carreras/carreras.jsp").forward(request, response);
@@ -53,7 +56,7 @@ public class CarreraController extends HttpServlet {
         if ("/registrarCarrera".equals(ruta)) {
             String nombreCarrera = request.getParameter("nombre");
             
-            carrera.addCarrera(nombreCarrera);
+            carreraDao.addCarrera(nombreCarrera);
 
             response.sendRedirect("carreras?msg=success");
         }

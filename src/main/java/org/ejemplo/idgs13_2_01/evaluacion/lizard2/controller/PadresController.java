@@ -8,15 +8,21 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.UsuarioModel;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Grupo;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Padre;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.Alumno;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.UsuarioModel;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.UsuarioModelDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Grupo;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.GrupoDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Padre;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.PadreDao;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.Alumno;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.AlumnoDao;
 
 @WebServlet(name = "PadresController", urlPatterns = {"/padres", "/registrarPadre"})
 public class PadresController extends HttpServlet {
     Alumno alumno = new Alumno();
+    AlumnoDao alumnoDao = new AlumnoDao();
     Padre padreModel = new Padre();
+    PadreDao padreModelDao = new PadreDao();
     List<UsuarioModel> padres;
     List<UsuarioModel> alumnos;
     
@@ -29,6 +35,7 @@ public class PadresController extends HttpServlet {
         HttpSession session = request.getSession();
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
         UsuarioModel usuarioModel = new UsuarioModel();
+        UsuarioModelDao usuarioModelDao = new UsuarioModelDao();
         ruta = request.getServletPath();
         
         switch (ruta) {
@@ -38,10 +45,10 @@ public class PadresController extends HttpServlet {
                     return;
                 }
                 
-                padres = usuarioModel.getUsuarios("Padre");
+                padres = usuarioModelDao.getUsuarios("Padre");
                 request.setAttribute("padres", padres);
                 
-                alumnos = usuarioModel.getUsuariosAlumnos("Alumno");
+                alumnos = usuarioModelDao.getUsuariosAlumnos("Alumno");
                 request.setAttribute("alumnos", alumnos);
                 
                 
@@ -60,6 +67,7 @@ public class PadresController extends HttpServlet {
         ruta = request.getServletPath();
         
         UsuarioModel usuarioModel = new UsuarioModel();
+        UsuarioModelDao usuarioModelDao = new UsuarioModelDao();
         if ("/registrarPadre".equals(ruta)) {
             
             String nombrePadre = request.getParameter("nombrePadre");
@@ -72,15 +80,15 @@ public class PadresController extends HttpServlet {
             int IdUsuarioHijo = Integer.parseInt(intHijoPadre);
             System.out.println("IdUsuarioHijo: " + IdUsuarioHijo);
 
-            alumno = alumno.getById(IdUsuarioHijo);
+            alumno = alumnoDao.getById(IdUsuarioHijo);
             System.out.println("alumnoId: " + alumno.getId());
             
             //usuario
-            usuarioModel = usuarioModel.addUsuario(nombrePadre, correoPadre, contrasenaPadre, "Padre");
+            usuarioModel = usuarioModelDao.addUsuario(nombrePadre, correoPadre, contrasenaPadre, "Padre");
             System.out.println("idUsuario: " + usuarioModel.getId());
                                               //usuario
-            padreModel = padreModel.addPadre(usuarioModel.getId());
-            padreModel.addPadreAlumno(padreModel.getId(), alumno.getId());
+            padreModel = padreModelDao.addPadre(usuarioModel.getId());
+            padreModelDao.addPadreAlumno(padreModel.getId(), alumno.getId());
             response.sendRedirect("padres?msg=success");
         }
     }

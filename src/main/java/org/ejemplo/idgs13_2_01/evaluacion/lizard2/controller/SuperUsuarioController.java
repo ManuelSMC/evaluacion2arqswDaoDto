@@ -9,12 +9,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.net.URLEncoder;
-import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.UsuarioModel;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dto.UsuarioModel;
+import org.ejemplo.idgs13_2_01.evaluacion.lizard2.model.dao.UsuarioModelDao;
 
 @WebServlet(name = "SuperUsuarioController", urlPatterns = {"/tipoUsuario", "/registrarUsuario"})
 public class SuperUsuarioController extends HttpServlet {
     
     UsuarioModel usuario = new UsuarioModel();
+    UsuarioModelDao usuarioDao = new UsuarioModelDao();
     List<UsuarioModel> usuarios;
     
     String ruta = "";
@@ -36,7 +38,7 @@ public class SuperUsuarioController extends HttpServlet {
                 }
                 String rolUsuario = request.getParameter("rol");
                 request.setAttribute("rol", rolUsuario);
-                usuarios = usuario.getUsuarios(rolUsuario);
+                usuarios = usuarioDao.getUsuarios(rolUsuario);
                 
                 request.setAttribute("usuarios", usuarios);
                 request.getRequestDispatcher("/WEB-INF/usuarios/usuarios.jsp").forward(request, response);
@@ -59,7 +61,7 @@ public class SuperUsuarioController extends HttpServlet {
             String contrasena = request.getParameter("contrasena");
             String rol = request.getParameter("rol");
             
-            usuario.addUsuario(nombre, correo, contrasena, rol);
+            usuarioDao.addUsuario(nombre, correo, contrasena, rol);
 
             response.sendRedirect("tipoUsuario?rol=" + URLEncoder.encode(rol, "UTF-8"));
         }
